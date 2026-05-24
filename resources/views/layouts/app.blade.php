@@ -173,15 +173,17 @@
         
         <!-- Footer Actions -->
         <div class="mt-auto pt-4 border-t border-outline-variant/20 space-y-1">
-            <div class="flex items-center gap-3 px-4 py-3 bg-[#dce9ff] rounded-xl mb-4">
+            <a href="{{ route('profile.edit') }}"
+               class="flex items-center gap-3 px-4 py-3 bg-[#dce9ff] rounded-xl mb-4 hover:bg-[#c5d8ff] transition-colors group">
                 <div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-on-secondary shrink-0">
                     <span class="material-symbols-outlined text-white" data-icon="person">person</span>
                 </div>
-                <div class="flex flex-col min-w-0">
+                <div class="flex flex-col min-w-0 flex-1">
                     <span class="font-bold text-sm text-on-surface truncate">{{ auth()->user()->name }}</span>
                     <span class="text-[10px] font-bold text-on-surface-variant tracking-wider">{{ strtoupper(auth()->user()->role) }}</span>
                 </div>
-            </div>
+                <span class="material-symbols-outlined text-[16px] text-secondary/50 group-hover:text-secondary transition-colors">edit</span>
+            </a>
             
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
@@ -260,15 +262,17 @@
             
             <!-- User Info & Logout -->
             <div class="mt-auto pt-4 border-t border-outline-variant/20 space-y-1">
-                <div class="flex items-center gap-3 px-4 py-3 bg-[#dce9ff] rounded-xl mb-4">
+                <a href="{{ route('profile.edit') }}"
+                   class="flex items-center gap-3 px-4 py-3 bg-[#dce9ff] rounded-xl mb-4 hover:bg-[#c5d8ff] transition-colors group">
                     <div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-on-secondary shrink-0">
                         <span class="material-symbols-outlined text-white">person</span>
                     </div>
-                    <div class="flex flex-col min-w-0">
+                    <div class="flex flex-col min-w-0 flex-1">
                         <span class="font-bold text-sm text-on-surface truncate">{{ auth()->user()->name }}</span>
                         <span class="text-[10px] font-bold text-on-surface-variant tracking-wider">{{ strtoupper(auth()->user()->role) }}</span>
                     </div>
-                </div>
+                    <span class="material-symbols-outlined text-[16px] text-secondary/50 group-hover:text-secondary transition-colors">edit</span>
+                </a>
                 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
