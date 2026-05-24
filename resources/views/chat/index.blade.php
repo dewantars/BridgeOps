@@ -30,7 +30,7 @@
         @php
             $lastMsg = $project->chatMessages->first();
         @endphp
-        <a href="{{ route('chat.show', $project) }}"
+        <a wire:navigate href="{{ route('chat.show', $project) }}"
            class="flex items-center gap-4 bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-5 py-4 hover:border-secondary/40 hover:shadow-sm transition-all duration-150 group relative">
 
             {{-- Project Avatar --}}

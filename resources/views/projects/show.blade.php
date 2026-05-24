@@ -15,7 +15,7 @@
                 Generate AI Report
             </button>
         </form>
-        <a href="{{ route('projects.edit', $project) }}" id="btn-edit-project"
+        <a wire:navigate href="{{ route('projects.edit', $project) }}" id="btn-edit-project"
            class="bg-surface border border-outline-variant text-on-surface font-body-lg text-body-sm px-4 py-2 rounded-lg hover:bg-surface-container transition-colors flex items-center gap-2">
             <span class="material-symbols-outlined text-[20px]">edit</span>
             Edit
@@ -94,12 +94,12 @@
         <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl overflow-hidden ambient-shadow">
             <div class="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
                 <h3 class="text-sm font-semibold text-on-surface">Activity Timeline</h3>
-                <a href="{{ route('activities.index', ['project_id' => $project->id]) }}"
+                <a wire:navigate href="{{ route('activities.index', ['project_id' => $project->id]) }}"
                    class="text-xs text-secondary hover:underline">View all →</a>
             </div>
             <div class="divide-y divide-outline-variant/10">
                 @forelse($project->engineeringEvents as $event)
-                <a href="{{ route('activities.show', $event) }}"
+                <a wire:navigate href="{{ route('activities.show', $event) }}"
                    class="flex items-start gap-4 px-6 py-4 hover:bg-surface-bright transition-colors group block">
                     <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5
                         {{ $event->event_type === 'push' ? 'bg-[#E3F2FD] text-secondary' : '' }}
@@ -268,7 +268,7 @@
         </div>
 
         {{-- Chat Quick Access --}}
-        <a href="{{ route('chat.show', $project) }}"
+        <a wire:navigate href="{{ route('chat.show', $project) }}"
            class="flex items-center gap-3 bg-[#dce9ff] border border-secondary/20 rounded-2xl px-5 py-4 hover:bg-[#c5d8ff] transition-colors group">
             <div class="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center shrink-0">
                 <span class="material-symbols-outlined text-white text-[20px]">chat</span>
@@ -284,11 +284,11 @@
         <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl overflow-hidden ambient-shadow">
             <div class="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
                 <h3 class="text-sm font-semibold text-on-surface">Reports</h3>
-                <a href="{{ route('reports.index', $project) }}" class="text-xs text-secondary hover:underline">All →</a>
+                <a wire:navigate href="{{ route('reports.index', $project) }}" class="text-xs text-secondary hover:underline">All →</a>
             </div>
             <div class="p-4 space-y-2">
                 @forelse($project->reports as $report)
-                <a href="{{ route('reports.show', [$project, $report]) }}"
+                <a wire:navigate href="{{ route('reports.show', [$project, $report]) }}"
                    class="flex items-center gap-3 p-3 bg-surface hover:bg-surface-container border border-outline-variant/20 rounded-xl transition-colors group block">
                     <div class="w-8 h-8 bg-[#dce9ff] rounded flex items-center justify-center flex-shrink-0 text-secondary">
                         <span class="material-symbols-outlined text-[18px]">description</span>

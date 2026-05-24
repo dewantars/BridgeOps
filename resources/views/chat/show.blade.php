@@ -5,12 +5,12 @@
 @section('page-subtitle', 'Chat Proyek · ' . $project->client_name)
 
 @section('header-actions')
-    <a href="{{ route('chat.index') }}"
+    <a wire:navigate href="{{ route('chat.index') }}"
        class="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-secondary border border-outline-variant/40 hover:border-secondary/40 px-3 py-1.5 rounded-lg transition-colors">
         <span class="material-symbols-outlined text-[14px]">arrow_back</span>
         Semua Chat
     </a>
-    <a href="{{ route('projects.show', $project) }}"
+    <a wire:navigate href="{{ route('projects.show', $project) }}"
        class="inline-flex items-center gap-1.5 text-xs font-semibold text-secondary bg-[#dce9ff] hover:bg-[#c5d8ff] px-3 py-1.5 rounded-lg transition-colors">
         <span class="material-symbols-outlined text-[14px]">account_tree</span>
         Detail Proyek
@@ -129,16 +129,18 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+function initChatPage() {
     const chatMessages = document.getElementById('chat-messages');
     const chatInput    = document.getElementById('chat-input');
     const chatForm     = document.getElementById('chat-form');
     const sendBtn      = document.getElementById('chat-send-btn');
 
+    if (!chatMessages) return;
+    if (chatMessages.dataset.init) return;
+    chatMessages.dataset.init = "true";
+
     // Auto-scroll to bottom on page load
-    if (chatMessages) {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 
     // Auto-resize textarea as user types
     if (chatInput) {
@@ -169,6 +171,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // Focus input on load
         chatInput.focus();
     }
-});
+}
+document.addEventListener('DOMContentLoaded', initChatPage);
+document.addEventListener('livewire:navigated', initChatPage);
 </script>
 @endsection

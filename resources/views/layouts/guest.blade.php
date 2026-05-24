@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'BridgeOps AI') }}</title>
+    <title>{{ config('app.name', 'BridgeOps') }}</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -139,15 +139,21 @@
 <header class="w-full bg-surface">
     <div class="flex justify-between items-center w-full px-margin-desktop py-base max-w-container-max mx-auto md:px-margin-desktop px-margin-mobile">
         <div class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg font-bold text-on-surface">
-            <a href="/">BridgeOps AI</a>
+            <a href="/">BridgeOps</a>
         </div>
-        <div>
+        <div class="flex items-center space-x-4">
+            <!-- Language Toggle Button -->
+            <button id="lang-toggle" class="flex items-center space-x-2 text-on-surface-variant hover:text-secondary hover:bg-surface-container px-3 py-2 rounded-full transition-all duration-200 border border-outline-variant/30 focus:outline-none" aria-label="Change Language">
+                <span class="material-symbols-outlined text-[20px] transition-transform duration-300">g_translate</span>
+                <span id="lang-label" class="font-label-caps text-label-caps font-bold">EN</span>
+            </button>
+
             @if(request()->routeIs('login'))
-                <a class="font-title-md text-title-md text-primary cursor-pointer transition-all active:scale-95 hover:text-surface-tint" href="{{ route('register') }}">
+                <a class="font-title-md text-title-md text-primary cursor-pointer transition-all active:scale-95 hover:text-surface-tint" href="{{ route('register') }}" data-translate-key="nav_signup">
                     Sign Up
                 </a>
             @else
-                <a class="font-title-md text-title-md text-primary cursor-pointer transition-all active:scale-95 hover:text-surface-tint" href="{{ route('login') }}">
+                <a class="font-title-md text-title-md text-primary cursor-pointer transition-all active:scale-95 hover:text-surface-tint" href="{{ route('login') }}" data-translate-key="nav_login">
                     Log In
                 </a>
             @endif
@@ -166,17 +172,169 @@
 <!-- Footer -->
 <footer class="w-full bg-surface-container-low mt-auto">
     <div class="w-full px-margin-desktop py-stack-lg flex flex-col md:flex-row justify-between items-center gap-gutter max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
-        <div class="font-label-caps text-label-caps text-on-surface text-center md:text-left">
+        <div class="font-label-caps text-label-caps text-on-surface text-center md:text-left" data-translate-key="footer_rights">
             © 2026 BridgeOps AI. All rights reserved.
         </div>
         <nav class="flex flex-wrap justify-center gap-gutter font-body-sm text-body-sm text-on-surface-variant">
-            <a class="hover:underline hover:text-secondary transition-opacity hover:opacity-80" href="#">Privacy Policy</a>
-            <a class="hover:underline hover:text-secondary transition-opacity hover:opacity-80" href="#">Terms of Service</a>
-            <a class="hover:underline hover:text-secondary transition-opacity hover:opacity-80" href="#">Security</a>
-            <a class="hover:underline hover:text-secondary transition-opacity hover:opacity-80" href="#">Contact Support</a>
+            <a class="hover:underline hover:text-secondary transition-opacity hover:opacity-80" href="#" data-translate-key="footer_privacy">Privacy Policy</a>
+            <a class="hover:underline hover:text-secondary transition-opacity hover:opacity-80" href="#" data-translate-key="footer_terms">Terms of Service</a>
+            <a class="hover:underline hover:text-secondary transition-opacity hover:opacity-80" href="#" data-translate-key="footer_security">Security</a>
+            <a class="hover:underline hover:text-secondary transition-opacity hover:opacity-80" href="#" data-translate-key="footer_contact">Contact Support</a>
         </nav>
     </div>
 </footer>
+
+<script>
+    const translations = {
+        en: {
+            nav_login: "Log In",
+            nav_signup: "Sign Up",
+            footer_rights: "© 2026 BridgeOps AI. All rights reserved.",
+            footer_privacy: "Privacy Policy",
+            footer_terms: "Terms of Service",
+            footer_security: "Security",
+            footer_contact: "Contact Support",
+            login_badge: "Platform Access",
+            login_title: "Log In",
+            login_subtitle: "Please enter your credentials to proceed to the analytical dashboard.",
+            login_label_email: "Business Email",
+            login_placeholder_email: "name@company.com",
+            login_label_password: "Password",
+            login_remember_me: "Remember Me",
+            login_forgot_password: "Forgot Password?",
+            login_btn_submit: "Log In",
+            login_register_prompt: "Don't have an account?",
+            login_register_link: "Sign up now",
+            register_badge: "Platform Access",
+            register_title: "Register Account",
+            register_subtitle: "Please complete the form below to create a new account.",
+            register_label_name: "Full Name",
+            register_label_email: "Business Email",
+            register_placeholder_email: "name@company.com",
+            register_label_password: "Password",
+            register_label_password_confirm: "Confirm Password",
+            register_btn_submit: "Register Account",
+            register_login_prompt: "Already have an account?",
+            register_login_link: "Log in now"
+        },
+        id: {
+            nav_login: "Masuk",
+            nav_signup: "Daftar",
+            footer_rights: "© 2026 BridgeOps AI. Hak cipta dilindungi undang-undang.",
+            footer_privacy: "Kebijakan Privasi",
+            footer_terms: "Ketentuan Layanan",
+            footer_security: "Keamanan",
+            footer_contact: "Hubungi Dukungan",
+            login_badge: "Akses Platform",
+            login_title: "Masuk",
+            login_subtitle: "Silakan masukkan kredensial Anda untuk melanjutkan ke dashboard analitik.",
+            login_label_email: "Email Bisnis",
+            login_placeholder_email: "nama@perusahaan.com",
+            login_label_password: "Kata Sandi",
+            login_remember_me: "Ingat Saya",
+            login_forgot_password: "Lupa Kata Sandi?",
+            login_btn_submit: "Masuk",
+            login_register_prompt: "Belum memiliki akun?",
+            login_register_link: "Daftar sekarang",
+            register_badge: "Akses Platform",
+            register_title: "Daftar Akun",
+            register_subtitle: "Silakan lengkapi formulir di bawah ini untuk membuat akun baru.",
+            register_label_name: "Nama Lengkap",
+            register_label_email: "Email Bisnis",
+            register_placeholder_email: "nama@perusahaan.com",
+            register_label_password: "Kata Sandi",
+            register_label_password_confirm: "Konfirmasi Kata Sandi",
+            register_btn_submit: "Daftar Akun",
+            register_login_prompt: "Sudah memiliki akun?",
+            register_login_link: "Masuk sekarang"
+        }
+    };
+
+    let currentLang = localStorage.getItem('lang') || 'en';
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('lang', lang);
+        document.documentElement.lang = lang;
+        
+        // Update toggle button UI
+        const label = document.getElementById('lang-label');
+        if (label) label.textContent = lang.toUpperCase();
+
+        // Animate the main card container during translation
+        const card = document.querySelector('main > div');
+        if (card) {
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.98) translateY(4px)';
+            card.style.transition = 'opacity 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 150ms cubic-bezier(0.4, 0, 0.2, 1)';
+        }
+
+        setTimeout(() => {
+            document.querySelectorAll('[data-translate-key]').forEach(el => {
+                const key = el.getAttribute('data-translate-key');
+                if (translations[lang] && translations[lang][key] !== undefined) {
+                    const translationVal = translations[lang][key];
+                    if (el.tagName === 'INPUT') {
+                        el.placeholder = translationVal;
+                    } else if (translationVal.includes('<') || el.tagName === 'H1') {
+                        el.innerHTML = translationVal;
+                    } else {
+                        el.textContent = translationVal;
+                    }
+                }
+            });
+
+            if (card) {
+                card.style.opacity = '1';
+                card.style.transform = 'scale(1) translateY(0)';
+            }
+        }, 150);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Apply saved language instantly on load
+        const savedLang = localStorage.getItem('lang') || 'en';
+        document.documentElement.lang = savedLang;
+        const label = document.getElementById('lang-label');
+        if (label) label.textContent = savedLang.toUpperCase();
+        
+        // Perform initial translation without animation
+        document.querySelectorAll('[data-translate-key]').forEach(el => {
+            const key = el.getAttribute('data-translate-key');
+            if (translations[savedLang] && translations[savedLang][key] !== undefined) {
+                const translationVal = translations[savedLang][key];
+                if (el.tagName === 'INPUT') {
+                    el.placeholder = translationVal;
+                } else if (translationVal.includes('<') || el.tagName === 'H1') {
+                    el.innerHTML = translationVal;
+                } else {
+                    el.textContent = translationVal;
+                }
+            }
+        });
+
+        // Setup click handler
+        const btn = document.getElementById('lang-toggle');
+        if (btn) {
+            btn.addEventListener('click', () => {
+                // Toggle between EN and ID
+                const nextLang = currentLang === 'en' ? 'id' : 'en';
+                
+                // Add micro-rotation animation to the icon
+                const icon = btn.querySelector('.material-symbols-outlined');
+                if (icon) {
+                    icon.style.transition = 'transform 300ms cubic-bezier(0.4, 0, 0.2, 1)';
+                    // Get current rotation
+                    const currentRotation = icon.style.transform || 'rotate(0deg)';
+                    const newRotation = currentRotation === 'rotate(360deg)' ? 'rotate(0deg)' : 'rotate(360deg)';
+                    icon.style.transform = newRotation;
+                }
+                
+                setLanguage(nextLang);
+            });
+        }
+    });
+</script>
 
 </body>
 </html>

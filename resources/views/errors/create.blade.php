@@ -101,7 +101,7 @@
                     <span class="material-symbols-outlined text-[18px]">error</span>
                     Simpan & Proses AI
                 </button>
-                <a href="{{ route('dashboard') }}"
+                <a wire:navigate href="{{ route('dashboard') }}"
                    class="bg-surface border border-outline-variant text-on-surface font-body-lg text-body-sm px-5 py-2.5 rounded-lg hover:bg-surface-container transition-colors">
                     Batal
                 </a>

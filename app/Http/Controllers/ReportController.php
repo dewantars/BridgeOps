@@ -11,6 +11,8 @@ class ReportController extends Controller
 {
     public function index(Project $project)
     {
+        $this->authorize('view-project', $project);
+
         $reports = $project->reports()->with('generatedBy')->latest()->paginate(10);
 
         return view('reports.index', compact('project', 'reports'));
@@ -18,6 +20,8 @@ class ReportController extends Controller
 
     public function show(Project $project, Report $report)
     {
+        $this->authorize('view-project', $project);
+
         return view('reports.show', compact('project', 'report'));
     }
 

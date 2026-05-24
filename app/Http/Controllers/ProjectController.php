@@ -11,9 +11,16 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        $projects = Project::withCount('engineeringEvents')
-            ->latest()
-            ->paginate(12);
+        $user = auth()->user();
+        $query = Project::withCount('engineeringEvents');
+
+        if ($user->role === 'client') {
+            $query->whereHas('members', function ($q) use ($user) {
+                $q->where('users.id', $user->id);
+            });
+        }
+
+        $projects = $query->latest()->paginate(12);
 
         return view('projects.index', compact('projects'));
     }
@@ -50,6 +57,8 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
+        $this->authorize('view-project', $project);
+
         $project->load([
             'engineeringEvents' => fn($q) => $q->with('aiSummary')->latest()->take(20),
             'manualErrorLogs'   => fn($q) => $q->latest()->take(10),

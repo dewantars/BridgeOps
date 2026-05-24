@@ -6,7 +6,7 @@
 
 @section('header-actions')
     @can('manage-projects')
-    <a href="{{ route('projects.create') }}" id="btn-create-project"
+    <a wire:navigate href="{{ route('projects.create') }}" id="btn-create-project"
        class="bg-primary text-on-primary rounded-lg font-title-md hover:bg-on-background transition-colors flex items-center gap-2 shadow-sm px-4 py-2 text-body-sm">
         <span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
         New Project
@@ -23,7 +23,7 @@
     <h3 class="text-on-surface font-semibold mb-2">Belum ada project</h3>
     <p class="text-on-surface-variant text-sm mb-6">Mulai dengan membuat project pertama Anda.</p>
     @can('manage-projects')
-    <a href="{{ route('projects.create') }}" class="bg-primary text-on-primary rounded-lg font-title-md hover:bg-on-background transition-colors flex items-center gap-2 shadow-sm px-6 py-3 text-body-sm">
+    <a wire:navigate href="{{ route('projects.create') }}" class="bg-primary text-on-primary rounded-lg font-title-md hover:bg-on-background transition-colors flex items-center gap-2 shadow-sm px-6 py-3 text-body-sm">
         <span class="material-symbols-outlined text-[18px]">add</span>
         Buat Project Pertama
     </a>
@@ -37,7 +37,7 @@
             {{-- Header --}}
             <div class="flex items-start justify-between mb-4">
                 <div class="flex-1 min-w-0">
-                    <a href="{{ route('projects.show', $project) }}" class="block">
+                    <a wire:navigate href="{{ route('projects.show', $project) }}" class="block">
                         <h3 class="text-on-surface font-bold text-base group-hover:text-secondary transition-colors truncate">{{ $project->name }}</h3>
                         <p class="text-on-surface-variant text-xs mt-0.5">{{ $project->client_name }}</p>
                     </a>
@@ -86,13 +86,13 @@
 
         {{-- Actions --}}
         <div class="flex items-center justify-between px-5 py-3 bg-surface-container-low border-t border-outline-variant/10">
-            <a href="{{ route('projects.show', $project) }}"
+            <a wire:navigate href="{{ route('projects.show', $project) }}"
                class="text-xs text-secondary hover:underline font-semibold transition-colors">
                 View Detail →
             </a>
             @can('manage-projects')
             <div class="flex items-center gap-3">
-                <a href="{{ route('projects.edit', $project) }}"
+                <a wire:navigate href="{{ route('projects.edit', $project) }}"
                    class="text-on-surface-variant hover:text-secondary transition-colors flex" title="Edit">
                     <span class="material-symbols-outlined text-[18px]">edit</span>
                 </a>

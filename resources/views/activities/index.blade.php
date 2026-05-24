@@ -46,7 +46,7 @@
             Filter
         </button>
         @if(request()->hasAny(['project_id', 'source', 'event_type', 'risk_level']))
-        <a href="{{ route('activities.index') }}" class="text-sm text-on-surface-variant hover:text-primary transition-colors ml-2">Reset</a>
+        <a wire:navigate href="{{ route('activities.index') }}" class="text-sm text-on-surface-variant hover:text-primary transition-colors ml-2">Reset</a>
         @endif
     </form>
 </div>
@@ -75,7 +75,7 @@
                         <div class="text-[10px]">{{ $activity->created_at->format('H:i') }}</div>
                     </td>
                     <td class="px-4 py-4">
-                        <a href="{{ route('projects.show', $activity->project) }}"
+                        <a wire:navigate href="{{ route('projects.show', $activity->project) }}"
                            class="text-xs text-secondary hover:underline font-bold truncate max-w-[120px] block">
                             {{ $activity->project->name }}
                         </a>
@@ -103,7 +103,7 @@
                         </span>
                     </td>
                     <td class="px-4 py-4">
-                        <a href="{{ route('activities.show', $activity) }}"
+                        <a wire:navigate href="{{ route('activities.show', $activity) }}"
                            class="text-sm text-on-surface hover:text-secondary transition-colors font-bold line-clamp-1 max-w-[200px] block">
                             {{ $activity->title }}
                         </a>

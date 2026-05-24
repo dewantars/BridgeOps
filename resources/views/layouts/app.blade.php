@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'BridgeOps AI') }} — @yield('title', 'Dashboard')</title>
+    <title>{{ config('app.name', 'BridgeOps') }} — @yield('title', 'Dashboard')</title>
     
     <!-- Google Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
@@ -119,10 +119,23 @@
         }
     </style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 <body class="bg-background text-on-background font-body-lg text-body-lg antialiased overflow-hidden">
 
-<div class="flex flex-col md:flex-row h-screen w-full overflow-hidden">
+<div 
+    x-data="{ navigating: false }"
+    x-on:livewire:navigating.window="navigating = true"
+    x-on:livewire:navigated.window="navigating = false"
+    class="flex flex-col md:flex-row h-screen w-full overflow-hidden relative"
+>
+    <!-- Livewire Navigate Loading Bar -->
+    <div 
+        x-show="navigating"
+        x-transition.opacity
+        class="fixed top-0 left-0 z-[9999] h-1 w-full bg-secondary"
+        style="display: none;"
+    ></div>
     <!-- Desktop SideNavBar Component (Hidden on Mobile/Tablet) -->
     <nav class="hidden md:flex h-screen w-64 flex-col fixed left-0 top-0 py-8 px-4 bg-[#f0f5ff] shadow-sm z-30 border-r border-outline-variant/10">
         <!-- Header / Logo -->
@@ -138,25 +151,25 @@
         <!-- Main Navigation -->
         <div class="flex-1 overflow-y-auto pr-2 space-y-1">
             <!-- Tab: Dashboard -->
-            <a class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('dashboard') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('dashboard') }}">
+            <a wire:navigate class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('dashboard') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('dashboard') }}">
                 <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('dashboard') ? 'text-secondary' : 'text-on-surface-variant' }}" data-icon="grid_view">grid_view</span>
                 <span class="text-sm">Dashboard</span>
             </a>
             
             <!-- Tab: Projects -->
-            <a class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('projects.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('projects.index') }}">
+            <a wire:navigate class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('projects.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('projects.index') }}">
                 <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('projects.*') ? 'text-secondary' : 'text-on-surface-variant' }}" data-icon="account_tree">account_tree</span>
                 <span class="text-sm">Projects</span>
             </a>
             
             <!-- Tab: Activity Timeline -->
-            <a class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('activities.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('activities.index') }}">
+            <a wire:navigate class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('activities.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('activities.index') }}">
                 <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('activities.*') ? 'text-secondary' : 'text-on-surface-variant' }}" data-icon="show_chart">show_chart</span>
                 <span class="text-sm">Activity Timeline</span>
             </a>
             
             <!-- Tab: Chat -->
-            <a class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('chat.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('chat.index') }}">
+            <a wire:navigate class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('chat.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('chat.index') }}">
                 <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('chat.*') ? 'text-secondary' : 'text-on-surface-variant' }}" data-icon="chat">chat</span>
                 <span class="text-sm flex-1">Chat</span>
                 <span id="sidebar-unread-badge" class="hidden text-[11px] font-bold text-white bg-secondary rounded-full w-5 h-5 flex items-center justify-center shrink-0"></span>
@@ -164,7 +177,7 @@
 
             <!-- Tab: Log Error Manual -->
             @can('manage-projects')
-            <a class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('manual-errors.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('manual-errors.create') }}">
+            <a wire:navigate class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('manual-errors.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('manual-errors.create') }}">
                 <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('manual-errors.*') ? 'text-secondary' : 'text-on-surface-variant' }}" data-icon="info">info</span>
                 <span class="text-sm">Log Error Manual</span>
             </a>
@@ -173,7 +186,7 @@
         
         <!-- Footer Actions -->
         <div class="mt-auto pt-4 border-t border-outline-variant/20 space-y-1">
-            <a href="{{ route('profile.edit') }}"
+            <a wire:navigate href="{{ route('profile.edit') }}"
                class="flex items-center gap-3 px-4 py-3 bg-[#dce9ff] rounded-xl mb-4 hover:bg-[#c5d8ff] transition-colors group">
                 <div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-on-secondary shrink-0">
                     <span class="material-symbols-outlined text-white" data-icon="person">person</span>
@@ -185,13 +198,10 @@
                 <span class="material-symbols-outlined text-[16px] text-secondary/50 group-hover:text-secondary transition-colors">edit</span>
             </a>
             
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-on-surface-variant hover:bg-white/30 transition-colors rounded-lg text-sm text-left">
-                    <span class="material-symbols-outlined text-[20px]" data-icon="logout">logout</span>
-                    <span>Logout</span>
-                </button>
-            </form>
+            <button onclick="showLogoutModal()" type="button" class="w-full flex items-center gap-3 px-4 py-2.5 text-on-surface-variant hover:text-red-600 hover:bg-red-50 transition-colors rounded-lg text-sm text-left">
+                <span class="material-symbols-outlined text-[20px]" data-icon="logout">logout</span>
+                <span>Logout</span>
+            </button>
         </div>
     </nav>
 
@@ -230,30 +240,30 @@
             
             <!-- Navigation Links -->
             <div class="flex-1 overflow-y-auto pr-2 space-y-1">
-                <a class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('dashboard') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('dashboard') }}">
+                <a wire:navigate class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('dashboard') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('dashboard') }}">
                     <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('dashboard') ? 'text-secondary' : 'text-on-surface-variant' }}">grid_view</span>
                     <span class="text-sm">Dashboard</span>
                 </a>
                 
-                <a class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('projects.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('projects.index') }}">
+                <a wire:navigate class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('projects.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('projects.index') }}">
                     <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('projects.*') ? 'text-secondary' : 'text-on-surface-variant' }}">account_tree</span>
                     <span class="text-sm">Projects</span>
                 </a>
                 
-                <a class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('activities.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('activities.index') }}">
+                <a wire:navigate class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('activities.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('activities.index') }}">
                     <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('activities.*') ? 'text-secondary' : 'text-on-surface-variant' }}">show_chart</span>
                     <span class="text-sm">Activity Timeline</span>
                 </a>
                 
                 <!-- Tab: Chat -->
-                <a class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('chat.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('chat.index') }}">
+                <a wire:navigate class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('chat.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('chat.index') }}">
                     <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('chat.*') ? 'text-secondary' : 'text-on-surface-variant' }}">chat</span>
                     <span class="text-sm flex-1">Chat</span>
                     <span id="sidebar-unread-badge-mobile" class="hidden text-[11px] font-bold text-white bg-secondary rounded-full w-5 h-5 flex items-center justify-center shrink-0"></span>
                 </a>
 
                 @can('manage-projects')
-                <a class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('manual-errors.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('manual-errors.create') }}">
+                <a wire:navigate class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('manual-errors.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('manual-errors.create') }}">
                     <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('manual-errors.*') ? 'text-secondary' : 'text-on-surface-variant' }}">info</span>
                     <span class="text-sm">Log Error Manual</span>
                 </a>
@@ -262,7 +272,7 @@
             
             <!-- User Info & Logout -->
             <div class="mt-auto pt-4 border-t border-outline-variant/20 space-y-1">
-                <a href="{{ route('profile.edit') }}"
+                <a wire:navigate href="{{ route('profile.edit') }}"
                    class="flex items-center gap-3 px-4 py-3 bg-[#dce9ff] rounded-xl mb-4 hover:bg-[#c5d8ff] transition-colors group">
                     <div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-on-secondary shrink-0">
                         <span class="material-symbols-outlined text-white">person</span>
@@ -274,13 +284,10 @@
                     <span class="material-symbols-outlined text-[16px] text-secondary/50 group-hover:text-secondary transition-colors">edit</span>
                 </a>
                 
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-on-surface-variant hover:bg-white/30 transition-colors rounded-lg text-sm text-left">
-                        <span class="material-symbols-outlined text-[20px]">logout</span>
-                        <span>Logout</span>
-                    </button>
-                </form>
+                <button onclick="showLogoutModal()" type="button" class="w-full flex items-center gap-3 px-4 py-2.5 text-on-surface-variant hover:text-red-600 hover:bg-red-50 transition-colors rounded-lg text-sm text-left">
+                    <span class="material-symbols-outlined text-[20px]">logout</span>
+                    <span>Logout</span>
+                </button>
             </div>
         </nav>
     </div>
@@ -321,7 +328,7 @@
 
 <!-- Mobile Menu Drawer Javascript Toggle -->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    function initAppLayout() {
         const openBtn = document.getElementById('mobile-menu-open');
         const closeBtn = document.getElementById('mobile-menu-close');
         const backdrop = document.getElementById('mobile-sidebar-backdrop');
@@ -346,9 +353,18 @@
             }, 300);
         }
 
-        if (openBtn) openBtn.addEventListener('click', openMenu);
-        if (closeBtn) closeBtn.addEventListener('click', closeMenu);
-        if (backdrop) backdrop.addEventListener('click', closeMenu);
+        if (openBtn && !openBtn.dataset.init) {
+            openBtn.dataset.init = "true";
+            openBtn.addEventListener('click', openMenu);
+        }
+        if (closeBtn && !closeBtn.dataset.init) {
+            closeBtn.dataset.init = "true";
+            closeBtn.addEventListener('click', closeMenu);
+        }
+        if (backdrop && !backdrop.dataset.init) {
+            backdrop.dataset.init = "true";
+            backdrop.addEventListener('click', closeMenu);
+        }
 
         // ─── Unread Chat Badge Polling ────────────────────────────
         function updateUnreadBadge() {
@@ -372,11 +388,101 @@
                 .catch(() => {});
         }
 
-        // Poll every 30 seconds
-        updateUnreadBadge();
-        setInterval(updateUnreadBadge, 30000);
-    });
+        if (!window.unreadBadgeInterval) {
+            updateUnreadBadge();
+            window.unreadBadgeInterval = setInterval(updateUnreadBadge, 30000);
+        } else {
+            updateUnreadBadge();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', initAppLayout);
+    document.addEventListener('livewire:navigated', initAppLayout);
 </script>
 
+    <!-- Hidden Logout Form -->
+    <form id="global-logout-form" method="POST" action="{{ route('logout') }}" class="hidden">
+        @csrf
+    </form>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logout-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div id="logout-modal-backdrop" class="fixed inset-0 bg-on-background/40 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
+        
+        <!-- Modal Content Card -->
+        <div id="logout-modal-card" class="relative bg-surface-container-lowest rounded-2xl p-6 w-full max-w-sm border border-outline-variant/30 shadow-ambient transition-all duration-300 transform scale-95 opacity-0">
+            <!-- Icon and Header -->
+            <div class="flex flex-col items-center text-center">
+                <div class="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center text-red-600 mb-4">
+                    <span class="material-symbols-outlined text-3xl">logout</span>
+                </div>
+                <h3 class="font-title-md text-title-md text-on-surface mb-2">Konfirmasi Logout</h3>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Apakah Anda yakin ingin keluar? Anda akan mengakhiri sesi aktif Anda pada BridgeOps AI.
+                </p>
+            </div>
+            
+            <!-- Actions -->
+            <div class="flex space-x-3 mt-6">
+                <button onclick="hideLogoutModal()" type="button" class="flex-1 py-3 px-4 rounded-full border border-outline-variant text-on-surface hover:bg-surface-container transition-colors text-center font-label-caps text-label-caps focus:outline-none">
+                    Batal
+                </button>
+                <button onclick="submitLogout()" type="button" class="flex-1 py-3 px-4 rounded-full bg-red-600 text-white hover:bg-red-700 shadow-ambient hover:-translate-y-0.5 active:scale-95 transition-all text-center font-label-caps text-label-caps focus:outline-none">
+                    Keluar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLogoutModal() {
+            const modal = document.getElementById('logout-modal');
+            const backdrop = document.getElementById('logout-modal-backdrop');
+            const card = document.getElementById('logout-modal-card');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            requestAnimationFrame(() => {
+                backdrop.classList.remove('opacity-0');
+                backdrop.classList.add('opacity-100');
+                card.classList.remove('scale-95', 'opacity-0');
+                card.classList.add('scale-100', 'opacity-100');
+            });
+        }
+        
+        function hideLogoutModal() {
+            const modal = document.getElementById('logout-modal');
+            const backdrop = document.getElementById('logout-modal-backdrop');
+            const card = document.getElementById('logout-modal-card');
+            
+            backdrop.classList.remove('opacity-100');
+            backdrop.classList.add('opacity-0');
+            card.classList.remove('scale-100', 'opacity-100');
+            card.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 300);
+        }
+        
+        function submitLogout() {
+            document.getElementById('global-logout-form').submit();
+        }
+
+        function initLogoutModal() {
+            const backdrop = document.getElementById('logout-modal-backdrop');
+            if (backdrop && !backdrop.dataset.init) {
+                backdrop.dataset.init = "true";
+                backdrop.addEventListener('click', hideLogoutModal);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initLogoutModal);
+        document.addEventListener('livewire:navigated', initLogoutModal);
+    </script>
+    @livewireScripts
 </body>
 </html>

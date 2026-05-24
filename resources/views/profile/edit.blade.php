@@ -299,30 +299,44 @@
     function togglePwd(fieldId, btn) {
         const input = document.getElementById(fieldId);
         const icon  = btn.querySelector('.material-symbols-outlined');
-        if (input.type === 'password') {
+        if (input && input.type === 'password') {
             input.type = 'text';
             icon.textContent = 'visibility_off';
-        } else {
+        } else if (input) {
             input.type = 'password';
             icon.textContent = 'visibility';
         }
     }
 
-    // Toggle delete confirm form
-    document.getElementById('show-delete-form')?.addEventListener('click', () => {
-        document.getElementById('delete-confirm-form').classList.remove('hidden');
-        document.getElementById('show-delete-form').classList.add('hidden');
-    });
+    function initProfilePage() {
+        const showDeleteBtn = document.getElementById('show-delete-form');
+        const cancelDeleteBtn = document.getElementById('cancel-delete');
+        const deleteConfirmForm = document.getElementById('delete-confirm-form');
 
-    document.getElementById('cancel-delete')?.addEventListener('click', () => {
-        document.getElementById('delete-confirm-form').classList.add('hidden');
-        document.getElementById('show-delete-form').classList.remove('hidden');
-    });
+        if (!showDeleteBtn) return;
+        if (showDeleteBtn.dataset.init) return;
+        showDeleteBtn.dataset.init = "true";
 
-    // Auto-open delete form if there were errors
-    @if($errors->userDeletion->isNotEmpty())
-        document.getElementById('delete-confirm-form')?.classList.remove('hidden');
-        document.getElementById('show-delete-form')?.classList.add('hidden');
-    @endif
+        showDeleteBtn.addEventListener('click', () => {
+            if (deleteConfirmForm) deleteConfirmForm.classList.remove('hidden');
+            showDeleteBtn.classList.add('hidden');
+        });
+
+        if (cancelDeleteBtn) {
+            cancelDeleteBtn.addEventListener('click', () => {
+                if (deleteConfirmForm) deleteConfirmForm.classList.add('hidden');
+                showDeleteBtn.classList.remove('hidden');
+            });
+        }
+
+        // Auto-open delete form if there were errors
+        @if($errors->userDeletion->isNotEmpty())
+            if (deleteConfirmForm) deleteConfirmForm.classList.remove('hidden');
+            showDeleteBtn.classList.add('hidden');
+        @endif
+    }
+
+    document.addEventListener('DOMContentLoaded', initProfilePage);
+    document.addEventListener('livewire:navigated', initProfilePage);
 </script>
 @endsection

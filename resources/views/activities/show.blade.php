@@ -5,7 +5,7 @@
 @section('page-subtitle', $event->project->name . ' · ' . $event->eventTypeLabel())
 
 @section('header-actions')
-    <a href="{{ route('activities.index') }}"
+    <a wire:navigate href="{{ route('activities.index') }}"
        class="bg-surface border border-outline-variant text-on-surface font-body-lg text-body-sm px-4 py-2 rounded-lg hover:bg-surface-container transition-colors flex items-center gap-2">
         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
         Back to Timeline
@@ -56,7 +56,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm border-t border-outline-variant/10 pt-4">
             <div>
                 <p class="text-on-surface-variant text-xs mb-0.5">Project</p>
-                <a href="{{ route('projects.show', $event->project) }}" class="text-secondary hover:underline font-bold text-sm">{{ $event->project->name }}</a>
+                <a wire:navigate href="{{ route('projects.show', $event->project) }}" class="text-secondary hover:underline font-bold text-sm">{{ $event->project->name }}</a>
             </div>
             <div>
                 <p class="text-on-surface-variant text-xs mb-0.5">Actor</p>

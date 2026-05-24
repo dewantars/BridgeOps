@@ -7,7 +7,7 @@
 
 @section('header-actions')
     @can('manage-projects')
-    <a href="{{ route('projects.create') }}" id="btn-new-project"
+    <a wire:navigate href="{{ route('projects.create') }}" id="btn-new-project"
        class="bg-primary text-on-primary rounded-lg font-title-md hover:bg-on-background transition-colors flex items-center gap-2 shadow-sm px-4 py-2 text-body-sm">
         <span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
         New Project
@@ -98,13 +98,13 @@
                 <!-- Card Header -->
                 <div class="flex items-center justify-between p-stack-lg border-b border-outline-variant/10">
                     <h3 class="font-title-md text-title-md text-on-surface">Recent Activity</h3>
-                    <a class="font-body-sm text-body-sm text-secondary hover:underline" href="{{ route('activities.index') }}">View all →</a>
+                    <a wire:navigate class="font-body-sm text-body-sm text-secondary hover:underline" href="{{ route('activities.index') }}">View all →</a>
                 </div>
                 
                 <!-- Activity List -->
                 <div class="divide-y divide-outline-variant/10">
                     @forelse($recentActivities as $activity)
-                    <a href="{{ route('activities.show', $activity) }}" class="p-stack-lg hover:bg-surface-bright transition-colors flex gap-4 group block">
+                    <a wire:navigate href="{{ route('activities.show', $activity) }}" class="p-stack-lg hover:bg-surface-bright transition-colors flex gap-4 group block">
                         <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-secondary shrink-0 mt-1">
                             @if($activity->event_type === 'push')
                                 <span class="material-symbols-outlined text-[20px]" data-icon="upload">upload</span>
@@ -200,13 +200,13 @@
             <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 ambient-shadow p-stack-lg">
                 <h3 class="font-title-md text-title-md text-on-surface mb-6">Quick Actions</h3>
                 <div class="space-y-3">
-                    <a href="{{ route('projects.create') }}" class="w-full flex items-center gap-3 p-4 rounded-xl bg-surface hover:bg-surface-container transition-colors border border-outline-variant/20 text-left group block">
+                    <a wire:navigate href="{{ route('projects.create') }}" class="w-full flex items-center gap-3 p-4 rounded-xl bg-surface hover:bg-surface-container transition-colors border border-outline-variant/20 text-left group block">
                         <div class="w-8 h-8 rounded bg-surface-container-highest flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
                             <span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
                         </div>
                         <span class="font-body-lg text-body-lg font-medium text-on-surface">Buat Project Baru</span>
                     </a>
-                    <a href="{{ route('manual-errors.create') }}" class="w-full flex items-center gap-3 p-4 rounded-xl bg-surface hover:bg-surface-container transition-colors border border-outline-variant/20 text-left group block">
+                    <a wire:navigate href="{{ route('manual-errors.create') }}" class="w-full flex items-center gap-3 p-4 rounded-xl bg-surface hover:bg-surface-container transition-colors border border-outline-variant/20 text-left group block">
                         <div class="w-8 h-8 rounded bg-error-container/50 flex items-center justify-center text-error group-hover:bg-error group-hover:text-on-error transition-colors">
                             <span class="material-symbols-outlined text-[18px]" data-icon="error">error</span>
                         </div>

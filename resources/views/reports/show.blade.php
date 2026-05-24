@@ -5,7 +5,7 @@
 @section('page-subtitle', $project->name . ' · ' . $report->created_at->format('d M Y'))
 
 @section('header-actions')
-    <a href="{{ route('reports.index', $project) }}"
+    <a wire:navigate href="{{ route('reports.index', $project) }}"
        class="bg-surface border border-outline-variant text-on-surface font-body-lg text-body-sm px-4 py-2 rounded-lg hover:bg-surface-container transition-colors flex items-center gap-2">
         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
         All Reports

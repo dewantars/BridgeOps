@@ -25,6 +25,14 @@ class AppServiceProvider extends ServiceProvider
             return in_array($user->role, ['admin', 'pm']);
         });
 
+        // Define gate for viewing specific project (admin/pm can see all, client must be a member)
+        Gate::define('view-project', function ($user, \App\Models\Project $project) {
+            if (in_array($user->role, ['admin', 'pm'])) {
+                return true;
+            }
+            return $project->members()->where('users.id', $user->id)->exists();
+        });
+
         // Admin can do everything
         Gate::before(function ($user, $ability) {
             if ($user->role === 'admin') {

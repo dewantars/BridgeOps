@@ -11,21 +11,54 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalProjects  = Project::count();
-        $totalActivities = EngineeringEvent::count();
-        $totalIssues    = EngineeringEvent::where('event_type', 'issue')->count();
-        $totalErrorLogs = ManualErrorLog::count();
+        $user = auth()->user();
 
-        $highRiskCount = \App\Models\AiSummary::whereIn('risk_level', ['high', 'critical'])->count();
+        if ($user->role === 'client') {
+            // Client: only see projects they are members of
+            $projectIdsQuery = Project::whereHas('members', function ($q) use ($user) {
+                $q->where('users.id', $user->id);
+            });
+            $projectIds = (clone $projectIdsQuery)->pluck('id');
 
-        $recentActivities = EngineeringEvent::with(['project', 'aiSummary'])
-            ->latest()
-            ->take(10)
-            ->get();
+            $totalProjects   = $projectIdsQuery->count();
+            $totalActivities = EngineeringEvent::whereIn('project_id', $projectIds)->count();
+            $totalIssues     = EngineeringEvent::whereIn('project_id', $projectIds)->where('event_type', 'issue')->count();
+            $totalErrorLogs  = ManualErrorLog::whereIn('project_id', $projectIds)->count();
 
-        $projectsByStatus = Project::selectRaw('status, count(*) as total')
-            ->groupBy('status')
-            ->pluck('total', 'status');
+            $highRiskCount = \App\Models\AiSummary::whereHas('engineeringEvent', fn($q) => $q->whereIn('project_id', $projectIds))
+                ->whereIn('risk_level', ['high', 'critical'])
+                ->count();
+
+            $recentActivities = EngineeringEvent::with(['project', 'aiSummary'])
+                ->whereIn('project_id', $projectIds)
+                ->latest()
+                ->take(10)
+                ->get();
+
+            $projectsByStatus = Project::whereHas('members', function ($q) use ($user) {
+                $q->where('users.id', $user->id);
+            })
+                ->selectRaw('status, count(*) as total')
+                ->groupBy('status')
+                ->pluck('total', 'status');
+        } else {
+            // Admin/PM: see all
+            $totalProjects   = Project::count();
+            $totalActivities = EngineeringEvent::count();
+            $totalIssues     = EngineeringEvent::where('event_type', 'issue')->count();
+            $totalErrorLogs  = ManualErrorLog::count();
+
+            $highRiskCount = \App\Models\AiSummary::whereIn('risk_level', ['high', 'critical'])->count();
+
+            $recentActivities = EngineeringEvent::with(['project', 'aiSummary'])
+                ->latest()
+                ->take(10)
+                ->get();
+
+            $projectsByStatus = Project::selectRaw('status, count(*) as total')
+                ->groupBy('status')
+                ->pluck('total', 'status');
+        }
 
         return view('dashboard', compact(
             'totalProjects',
