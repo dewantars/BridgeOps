@@ -71,6 +71,11 @@ class Project extends Model
         return $this->hasMany(Report::class);
     }
 
+    public function chatMessages()
+    {
+        return $this->hasMany(ChatMessage::class);
+    }
+
     // Scopes
     public function scopeByStatus($query, string $status)
     {

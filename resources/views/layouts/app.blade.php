@@ -155,6 +155,13 @@
                 <span class="text-sm">Activity Timeline</span>
             </a>
             
+            <!-- Tab: Chat -->
+            <a class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('chat.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('chat.index') }}">
+                <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('chat.*') ? 'text-secondary' : 'text-on-surface-variant' }}" data-icon="chat">chat</span>
+                <span class="text-sm flex-1">Chat</span>
+                <span id="sidebar-unread-badge" class="hidden text-[11px] font-bold text-white bg-secondary rounded-full w-5 h-5 flex items-center justify-center shrink-0"></span>
+            </a>
+
             <!-- Tab: Log Error Manual -->
             @can('manage-projects')
             <a class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('manual-errors.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('manual-errors.create') }}">
@@ -236,6 +243,13 @@
                     <span class="text-sm">Activity Timeline</span>
                 </a>
                 
+                <!-- Tab: Chat -->
+                <a class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('chat.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('chat.index') }}">
+                    <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('chat.*') ? 'text-secondary' : 'text-on-surface-variant' }}">chat</span>
+                    <span class="text-sm flex-1">Chat</span>
+                    <span id="sidebar-unread-badge-mobile" class="hidden text-[11px] font-bold text-white bg-secondary rounded-full w-5 h-5 flex items-center justify-center shrink-0"></span>
+                </a>
+
                 @can('manage-projects')
                 <a class="relative flex items-center gap-3 px-4 py-2.5 rounded-lg font-semibold transition-all duration-150 {{ request()->routeIs('manual-errors.*') ? 'bg-[#dce9ff] text-secondary border-r-4 border-secondary' : 'text-on-surface-variant hover:bg-white/30' }}" href="{{ route('manual-errors.create') }}">
                     <span class="material-symbols-outlined text-[20px] {{ request()->routeIs('manual-errors.*') ? 'text-secondary' : 'text-on-surface-variant' }}">info</span>
@@ -331,6 +345,32 @@
         if (openBtn) openBtn.addEventListener('click', openMenu);
         if (closeBtn) closeBtn.addEventListener('click', closeMenu);
         if (backdrop) backdrop.addEventListener('click', closeMenu);
+
+        // ─── Unread Chat Badge Polling ────────────────────────────
+        function updateUnreadBadge() {
+            fetch('{{ route('chat.unread-count') }}')
+                .then(r => r.json())
+                .then(data => {
+                    const badges = [
+                        document.getElementById('sidebar-unread-badge'),
+                        document.getElementById('sidebar-unread-badge-mobile'),
+                    ];
+                    badges.forEach(badge => {
+                        if (!badge) return;
+                        if (data.count > 0) {
+                            badge.textContent = data.count > 9 ? '9+' : data.count;
+                            badge.classList.remove('hidden');
+                        } else {
+                            badge.classList.add('hidden');
+                        }
+                    });
+                })
+                .catch(() => {});
+        }
+
+        // Poll every 30 seconds
+        updateUnreadBadge();
+        setInterval(updateUnreadBadge, 30000);
     });
 </script>
 

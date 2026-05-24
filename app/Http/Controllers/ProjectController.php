@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -75,7 +76,11 @@ class ProjectController extends Controller
                 ->count(),
         ];
 
-        return view('projects.show', compact('project', 'issueEvents', 'stats'));
+        // Users not yet a member of this project (for the add-member dropdown)
+        $memberIds    = $project->members->pluck('id');
+        $nonMembers   = User::whereNotIn('id', $memberIds)->orderBy('name')->get();
+
+        return view('projects.show', compact('project', 'issueEvents', 'stats', 'nonMembers'));
     }
 
     public function edit(Project $project)

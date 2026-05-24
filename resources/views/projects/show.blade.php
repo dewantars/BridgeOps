@@ -186,6 +186,100 @@
 
     {{-- Right Sidebar --}}
     <div class="space-y-4">
+
+        {{-- Team Members Card --}}
+        <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl overflow-hidden ambient-shadow">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
+                <h3 class="text-sm font-semibold text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[16px] text-secondary">group</span>
+                    Anggota Tim
+                </h3>
+                <span class="text-xs text-on-surface-variant">{{ $project->members->count() }} orang</span>
+            </div>
+
+            {{-- Member List --}}
+            <div class="divide-y divide-outline-variant/10">
+                @forelse($project->members as $member)
+                <div class="flex items-center gap-3 px-4 py-3">
+                    {{-- Avatar --}}
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold text-xs text-white
+                        {{ $member->role === 'client' ? 'bg-[#4CAF50]' : 'bg-secondary' }}">
+                        {{ strtoupper(substr($member->name, 0, 1)) }}
+                    </div>
+                    {{-- Info --}}
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-semibold text-on-surface truncate">{{ $member->name }}</p>
+                        <p class="text-[10px] text-on-surface-variant">{{ $member->email }}</p>
+                    </div>
+                    {{-- Role Badge --}}
+                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full
+                        {{ $member->role === 'client' ? 'bg-green-100 text-green-700' : 'bg-[#dce9ff] text-secondary' }}">
+                        {{ $member->role }}
+                    </span>
+                    {{-- Remove Button (Admin/PM only, can't remove yourself if last manager) --}}
+                    @can('manage-projects')
+                    <form method="POST" action="{{ route('project-members.destroy', [$project, $member]) }}"
+                          onsubmit="return confirm('Hapus {{ $member->name }} dari proyek ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                                class="text-on-surface-variant/40 hover:text-error transition-colors ml-1"
+                                title="Hapus dari proyek">
+                            <span class="material-symbols-outlined text-[16px]">person_remove</span>
+                        </button>
+                    </form>
+                    @endcan
+                </div>
+                @empty
+                <p class="text-xs text-on-surface-variant text-center py-4">Belum ada anggota</p>
+                @endforelse
+            </div>
+
+            {{-- Add Member Form (Admin/PM only) --}}
+            @can('manage-projects')
+            @if($nonMembers->isNotEmpty())
+            <div class="px-4 py-4 border-t border-outline-variant/10 bg-surface">
+                <p class="text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Tambah Anggota</p>
+                <form method="POST" action="{{ route('project-members.store', $project) }}"
+                      class="flex items-center gap-2">
+                    @csrf
+                    <select name="user_id"
+                            class="flex-1 text-xs border border-outline-variant/40 bg-[#f0f5ff] rounded-lg px-3 py-2 text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/30">
+                        <option value="">Pilih pengguna...</option>
+                        @foreach($nonMembers as $u)
+                        <option value="{{ $u->id }}">
+                            {{ $u->name }} ({{ strtoupper($u->role) }})
+                        </option>
+                        @endforeach
+                    </select>
+                    <button type="submit"
+                            class="shrink-0 bg-secondary text-white rounded-lg px-3 py-2 text-xs font-semibold hover:bg-secondary/80 transition-colors flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">person_add</span>
+                        Tambah
+                    </button>
+                </form>
+            </div>
+            @else
+            <div class="px-4 py-3 border-t border-outline-variant/10 bg-surface text-center">
+                <p class="text-[11px] text-on-surface-variant">Semua pengguna sudah menjadi anggota</p>
+            </div>
+            @endif
+            @endcan
+        </div>
+
+        {{-- Chat Quick Access --}}
+        <a href="{{ route('chat.show', $project) }}"
+           class="flex items-center gap-3 bg-[#dce9ff] border border-secondary/20 rounded-2xl px-5 py-4 hover:bg-[#c5d8ff] transition-colors group">
+            <div class="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-white text-[20px]">chat</span>
+            </div>
+            <div class="flex-1">
+                <p class="text-sm font-semibold text-secondary group-hover:underline">Buka Chat Proyek</p>
+                <p class="text-xs text-secondary/70">Komunikasi langsung dengan tim</p>
+            </div>
+            <span class="material-symbols-outlined text-secondary text-[18px]">arrow_forward</span>
+        </a>
+
         {{-- Reports --}}
         <div class="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl overflow-hidden ambient-shadow">
             <div class="flex items-center justify-between px-6 py-4 border-b border-outline-variant/10">
