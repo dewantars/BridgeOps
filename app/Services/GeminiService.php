@@ -41,8 +41,11 @@ class GeminiService
                 ],
                 'generationConfig' => [
                     'temperature'      => 0.7,
-                    'maxOutputTokens'  => 1024,
+                    'maxOutputTokens'  => 4096,
                     'responseMimeType' => 'application/json',
+                    'thinkingConfig'   => [
+                        'thinkingBudget' => 0,
+                    ],
                     'responseSchema'   => [
                         'type' => 'OBJECT',
                         'properties' => [
@@ -119,8 +122,11 @@ class GeminiService
                 ],
                 'generationConfig' => [
                     'temperature'      => 0.7,
-                    'maxOutputTokens'  => 2048,
+                    'maxOutputTokens'  => 4096,
                     'responseMimeType' => 'application/json',
+                    'thinkingConfig'   => [
+                        'thinkingBudget' => 0,
+                    ],
                     'responseSchema'   => [
                         'type' => 'OBJECT',
                         'properties' => [
