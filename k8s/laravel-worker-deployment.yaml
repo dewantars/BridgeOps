@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laravel-worker
+  labels:
+    app: bridgeops
+    component: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bridgeops
+      component: worker
+  template:
+    metadata:
+      labels:
+        app: bridgeops
+        component: worker
+    spec:
+      containers:
+        - name: laravel-worker
+          image: praktikan/bridgeops-app:latest
+          imagePullPolicy: Always
+          args: ["queue"]
+          envFrom:
+            - configMapRef:
+                name: laravel-config
+            - secretRef:
+                name: laravel-secret
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

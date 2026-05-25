@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laravel-web
+  labels:
+    app: bridgeops
+    component: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bridgeops
+      component: web
+  template:
+    metadata:
+      labels:
+        app: bridgeops
+        component: web
+    spec:
+      # Init container to run migrations once database is ready
+      initContainers:
+        - name: database-migration
+          image: praktikan/bridgeops-app:latest
+          imagePullPolicy: Always
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Waiting for PostgreSQL database to be online..."
+              until pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USERNAME; do
+                echo "PostgreSQL is not ready yet. Retrying in 2 seconds..."
+                sleep 2
+              done
+              echo "PostgreSQL is online! Running database migrations..."
+              php artisan migrate --force
+          envFrom:
+            - configMapRef:
+                name: laravel-config
+            - secretRef:
+                name: laravel-secret
+      containers:
+        - name: laravel-web
+          image: praktikan/bridgeops-app:latest
+          imagePullPolicy: Always
+          args: ["web"]
+          ports:
+            - containerPort: 80
+              name: http
+          envFrom:
+            - configMapRef:
+                name: laravel-config
+            - secretRef:
+                name: laravel-secret
+          # Liveness and Readiness Probes to ensure application health
+          livenessProbe:
+            httpGet:
+              path: /login
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
