@@ -240,7 +240,7 @@ jobs:
           APP_KEY_B64=$(echo -n "${{ secrets.APP_KEY }}" | base64 -w 0)
           DB_PASS_B64=$(echo -n "${{ secrets.DB_PASSWORD }}" | base64 -w 0)
           GEMINI_B64=$(echo -n "${{ secrets.GEMINI_API_KEY }}" | base64 -w 0)
-          WEBHOOK_B64=$(echo -n "${{ secrets.GITHUB_WEBHOOK_SECRET }}" | base64 -w 0)
+          WEBHOOK_B64=$(echo -n "${{ secrets.GH_WEBHOOK_SECRET }}" | base64 -w 0)
 
           cat > k8s/laravel-secret.yaml <<EOF
           apiVersion: v1
