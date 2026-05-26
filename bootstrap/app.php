@@ -13,6 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Trust all proxies (necessary for cloud hosting like Railway)
+        $middleware->trustProxies(at: '*');
+
         // Exclude GitHub webhook from CSRF protection
         $middleware->validateCsrfTokens(except: [
             'api/webhooks/github',

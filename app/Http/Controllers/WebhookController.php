@@ -14,11 +14,23 @@ class WebhookController extends Controller
     {
         $secret = config('services.github.webhook_secret', '');
 
-        // Verify HMAC signature (skip if no secret set for local dev)
-        if (!empty($secret) && $secret !== 'your_webhook_secret_here') {
+        if (app()->isProduction()) {
+            // In production, signature verification is STRICTLY REQUIRED.
+            if (empty($secret) || $secret === 'your_webhook_secret_here') {
+                Log::critical('GitHub webhook secret is not configured in production environment!');
+                return response()->json(['error' => 'Webhook security misconfiguration'], 500);
+            }
             if (!$webhookService->verifySignature($request, $secret)) {
                 Log::warning('GitHub webhook: invalid signature');
                 return response()->json(['error' => 'Invalid signature'], 403);
+            }
+        } else {
+            // Local dev signature verification (can be skipped if secret is not set yet)
+            if (!empty($secret) && $secret !== 'your_webhook_secret_here') {
+                if (!$webhookService->verifySignature($request, $secret)) {
+                    Log::warning('GitHub webhook: invalid signature');
+                    return response()->json(['error' => 'Invalid signature'], 403);
+                }
             }
         }
 
