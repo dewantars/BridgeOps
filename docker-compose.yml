@@ -24,5 +24,78 @@ services:
     depends_on:
       - postgres
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bridgeops_app
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: base64:txOPnGbRI1abiKjyEgMVlk+1pesU2rO5SGIAljjGnvo=
+      APP_URL: http://localhost:8080
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: bridgeops_ai
+      DB_USERNAME: bridgeops_user
+      DB_PASSWORD: bridgeops_password
+      QUEUE_CONNECTION: database
+      SESSION_DRIVER: database
+      CACHE_STORE: database
+    depends_on:
+      - postgres
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bridgeops_worker
+    restart: always
+    command: ["queue"]
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: base64:txOPnGbRI1abiKjyEgMVlk+1pesU2rO5SGIAljjGnvo=
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: bridgeops_ai
+      DB_USERNAME: bridgeops_user
+      DB_PASSWORD: bridgeops_password
+      QUEUE_CONNECTION: database
+      SESSION_DRIVER: database
+      CACHE_STORE: database
+    depends_on:
+      - postgres
+      - app
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bridgeops_scheduler
+    restart: always
+    command: ["scheduler"]
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: base64:txOPnGbRI1abiKjyEgMVlk+1pesU2rO5SGIAljjGnvo=
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: bridgeops_ai
+      DB_USERNAME: bridgeops_user
+      DB_PASSWORD: bridgeops_password
+      QUEUE_CONNECTION: database
+      SESSION_DRIVER: database
+      CACHE_STORE: database
+    depends_on:
+      - postgres
+      - app
+
 volumes:
   bridgeops_postgres_data:
