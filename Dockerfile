@@ -67,10 +67,14 @@ COPY --from=node-builder /app/public/build /var/www/html/public/build
 
 # Set correct permissions for Laravel directories
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache \
+    && mkdir -p /run/nginx /var/lib/nginx/tmp/client_body /var/lib/nginx/tmp/proxy /var/lib/nginx/tmp/fastcgi /var/lib/nginx/tmp/uwsgi /var/lib/nginx/tmp/scgi \
+    && chown -R www-data:www-data /run/nginx /var/lib/nginx /var/log/nginx
 
 # Expose HTTP port
-EXPOSE 80
+EXPOSE 8080
+
+USER www-data
 
 # Configure entrypoint and default command
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
