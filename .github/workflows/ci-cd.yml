@@ -1,4 +1,4 @@
-name: CI/CD Pipeline - BridgeOps AI
+name: CI/CD Pipeline
 
 on:
   push:
@@ -75,11 +75,8 @@ jobs:
           fetch-depth: 0
 
       - name: Run SonarQube scan
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://sonarcloud.io
-        with:
-          args: >
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+
