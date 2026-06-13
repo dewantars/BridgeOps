@@ -45,6 +45,9 @@ services:
       DB_PASSWORD:
       QUEUE_CONNECTION: database
       SESSION_DRIVER: database
+      SESSION_SECURE_COOKIE: "true"
+      SESSION_HTTP_ONLY: "true"
+      SESSION_SAME_SITE: lax
       CACHE_STORE: database
     depends_on:
       - postgres
@@ -69,6 +72,9 @@ services:
       DB_PASSWORD:
       QUEUE_CONNECTION: database
       SESSION_DRIVER: database
+      SESSION_SECURE_COOKIE: "true"
+      SESSION_HTTP_ONLY: "true"
+      SESSION_SAME_SITE: lax
       CACHE_STORE: database
     depends_on:
       - postgres
@@ -94,6 +100,9 @@ services:
       DB_PASSWORD:
       QUEUE_CONNECTION: database
       SESSION_DRIVER: database
+      SESSION_SECURE_COOKIE: "true"
+      SESSION_HTTP_ONLY: "true"
+      SESSION_SAME_SITE: lax
       CACHE_STORE: database
     depends_on:
       - postgres
