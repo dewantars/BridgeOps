@@ -17,6 +17,23 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'ok',
+        'service' => 'laravel-11-postgresql',
+    ]);
+});
+
+Route::get('/metrics', function () {
+    return response(
+        "# HELP laravel_app_up Laravel application status\n" .
+        "# TYPE laravel_app_up gauge\n" .
+        "laravel_app_up 1\n",
+        200,
+        ['Content-Type' => 'text/plain']
+    );
+});
+
 Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
