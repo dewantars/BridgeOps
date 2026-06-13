@@ -1,14 +1,41 @@
 .git
+.gitignore
 .github
 .idea
 .vscode
+
+# Dependencies and build output are created inside Docker stages.
 node_modules
 vendor
+public/build
+
+# Never send local secrets or credentials to the Docker build context.
 .env
-.env.backup
-.env.production
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+id_rsa
+id_rsa.pub
+**/id_rsa
+**/id_rsa.pub
+
+# Local runtime, test, and cache artifacts.
 .phpunit.result.cache
-docker-compose.yml
+coverage
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+storage/logs/*
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/testing/*
+storage/framework/views/*
+
+# Files not needed in the production image.
+docker-compose*.yml
 Dockerfile
 .dockerignore
 k8s
@@ -17,7 +44,3 @@ phpunit.xml
 README.md
 DESIGN.md
 PANDUAN.md
-storage/logs/*
-storage/framework/cache/data/*
-storage/framework/sessions/*
-storage/framework/views/*
