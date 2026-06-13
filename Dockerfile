@@ -8,8 +8,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-# Copy application and build assets
-COPY . .
+# Copy only the frontend sources and config required by Vite.
+COPY vite.config.js postcss.config.js tailwind.config.js ./
+COPY resources ./resources
+COPY public ./public
 RUN npm run build
 
 # ==========================================
@@ -28,8 +30,16 @@ COPY --from=docker.io/library/composer:2 /usr/bin/composer /usr/bin/composer
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 
-# Copy code and generate optimized autoloader
-COPY . .
+# Copy only the Laravel runtime sources required for production.
+COPY artisan .env.example ./
+COPY app ./app
+COPY bootstrap ./bootstrap
+COPY config ./config
+COPY database ./database
+COPY public ./public
+COPY resources ./resources
+COPY routes ./routes
+COPY storage ./storage
 RUN composer dump-autoload --no-dev --optimize
 
 # ==========================================
