@@ -1,0 +1,26 @@
+name: Develop and Feature Trigger
+
+on:
+  push:
+    branches:
+      - develop
+      - "feature/**"
+  pull_request:
+    branches:
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  default-ci:
+    name: Run Default CI
+    uses: ./.github/workflows/ci-cd.yml
+    secrets: inherit
+
+  application-gateway:
+    name: Run Application Security Gateway
+    needs: default-ci
+    uses: ./.github/workflows/application-gateway.yml
+    secrets: inherit
