@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
         with:
           php-version: "8.2"
           extensions: pdo_sqlite, sqlite3, zip
@@ -27,7 +27,7 @@ jobs:
         run: composer install --no-interaction --prefer-dist --no-scripts
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: "20"
           cache: npm
@@ -53,7 +53,7 @@ jobs:
           SESSION_DRIVER: array
           QUEUE_CONNECTION: sync
           GEMINI_API_KEY: ""
-          GITHUB_WEBHOOK_SECRET: "testing-secret"
+          GITHUB_WEBHOOK_SECRET: ${{ github.run_id }}
 
   composer-audit:
     name: Composer Dependency Audit
@@ -61,10 +61,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45
         with:
           php-version: "8.2"
           tools: composer:v2
@@ -81,10 +81,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: "20"
           cache: npm
@@ -94,4 +94,3 @@ jobs:
 
       - name: Run NPM audit
         run: npm audit --audit-level=moderate
-

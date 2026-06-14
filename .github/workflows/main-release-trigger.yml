@@ -13,16 +13,16 @@ jobs:
   default-ci:
     name: Run Default CI
     uses: ./.github/workflows/ci-cd.yml
-    secrets: inherit
 
   application-gateway:
     name: Run Application Security Gateway
     needs: default-ci
     uses: ./.github/workflows/application-gateway.yml
-    secrets: inherit
 
   container-scan-push:
     name: Scan and Push Container Image
     needs: application-gateway
     uses: ./.github/workflows/docker-build-push.yml
-    secrets: inherit
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
